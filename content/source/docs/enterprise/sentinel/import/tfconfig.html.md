@@ -52,6 +52,7 @@ tfconfig
 │       ├── modules
 │       │   └── NAME
 │       │       ├── config (map of keys)
+│       │       ├── references (list of strings) (TF 0.12 and later)
 │       │       ├── source (string)
 │       │       └── version (string)
 │       ├──outputs
@@ -59,6 +60,7 @@ tfconfig
 │       │       ├── depends_on (list of strings)
 │       │       ├── description (string)
 │       │       ├── sensitive (boolean)
+│       │       ├── references (list of strings) (TF 0.12 and later)
 │       │       └── value (value)
 │       ├── providers
 │       │   └── TYPE
@@ -67,10 +69,12 @@ tfconfig
 │       │       │       ├── config (map of keys)
 │       │       │       └── version (string)
 │       │       ├── config (map of keys)
+│       │       ├── references (list of strings) (TF 0.12 and later)
 │       │       └── version (string)
 │       ├── resources
 │       │   └── TYPE.NAME
 │       │       ├── config (map of keys)
+│       │       ├── references (list of strings) (TF 0.12 and later)
 │       │       └── provisioners
 │       │           └── NUMBER
 │       │               ├── config (map of keys)
@@ -267,12 +271,6 @@ The `config` value within the [resource
 namespace](##namespace-resources-data-sources) is a map of key-value pairs that
 directly map to Terraform config keys and values.
 
-As a consequence of the mapping of this key to raw Terraform configuration,
-complex structures within Terraform configuration are grouped _per-instance_ as
-they are represented within the actual configuration itself. This has
-implications when defining policy correctly. This applies to all complex
-structures - lists, sets, and maps.
-
 As an example, consider the following resource block:
 
 ```hcl
@@ -290,40 +288,6 @@ import "tfconfig"
 
 main = rule {
 	tfconfig.resources.local_file.accounts.config.filename is "accounts.txt"
-}
-```
-
-For a slightly more complicated example, consider the following resource block:
-
-```hcl
-resource "null_resource" "foo" {
-  triggers = {
-    foo = "one"
-  }
-
-  triggers = {
-    bar = "two"
-  }
-}
-```
-
-In this example, one would need to access both
-`tfconfig.resources.null_resource.foo.config.triggers[0].foo` and
-`tfconfig.resources.null_resource.foo.config.triggers[1].bar` to reach both
-triggers.
-
-This can be better represented by a loop. Given the above example, the following
-policy would evaluate to `true`:
-
-```python
-import "tfconfig"
-
-main = rule {
-	all tfconfig.resources.null_resource.foo.config.triggers as triggers {
-		all triggers as _, value {
-			value in ["one", "two"]
-		}
-	}
 }
 ```
 
@@ -588,14 +552,43 @@ main = rule { subject.outputs.id.sensitive }
 * **Value Type:** Any primitive type, list or map.
 
 The `value` value within the [output namespace](#namespace-outputs) represents
-the defined value for the output as declared in the configuration.
+the defined value for the output as declared in the configuration.  Primitives
+will bear the implicit type of its declaration (string, int, float, or bool),
+and maps and lists will be represented as such.
 
-The actual value will be as configured. Primitives will bear the implicit type
-of its declaration (string, int, float, or bool), and maps and lists will be
-represented as such.
+**With Terraform 0.11 or earlier**, if the output value is defined as an
+expression (and not a static value), the value will be in its raw,
+non-interpolated string. **With Terraform 0.12 or later**, any non-static
+values (such as interpolated strings) are not present and
+[`references`](#value-references) should be used instead.
 
-More often than not, the value will show up in its raw, non-interpolated string,
-unless the output is defined to a static value.
+As an example, given the following output declaration block:
+
+```hcl
+output "id" {
+  value = "${null_resource.foo.id}"
+}
+```
+
+With Terraform 0.11 or earlier the following policy would evaluate to `true`:
+
+```python
+import "tfconfig"
+
+main = rule { tfconfig.outputs.id.value is "${null_resource.foo.id}" }
+```
+
+For the same sort of policy with Terraform 0.12 or later, see the
+[references](#value-references) documentation below.
+
+### Value: `references`
+
+* **Value Type:**. List of strings.
+
+-> Note: This value is only present when using Terraform 0.12 or later
+
+The `references` value within the [output namespace](#namespace-outputs)
+represents the identifier within an expression found in [`value`](#value-value).
 
 As an example, given the following output declaration block:
 
@@ -610,7 +603,7 @@ The following policy would evaluate to `true`:
 ```python
 import "tfconfig"
 
-main = rule { tfconfig.outputs.id.value is "${null_resource.foo.id}" }
+main = rule { tfconfig.outputs.id.references contains "null_resource.foo.id" }
 ```
 
 ## Namespace: Providers
