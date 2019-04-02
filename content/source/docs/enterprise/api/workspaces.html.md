@@ -298,6 +298,14 @@ _Migrating a legacy environment_
 
 ## Update a Workspace
 
+This endpoint has two forms, which behave identically. One refers to a workspace by its ID, and the other by its name and organization.
+
+`PATCH /workspaces/:workspace_id`
+
+Parameter            | Description                       |
+-------------------- | ----------------------------------|
+`:workspace_id`      | The ID of the workspace to update |
+
 `PATCH /organizations/:organization_name/workspaces/:name`
 
 Parameter            | Description
@@ -518,6 +526,14 @@ $ curl \
 
 This endpoint shows details for a workspace in the organization.
 
+This endpoint has two forms, which behave identically. One refers to a workspace by its ID, and the other by its name and organization.
+
+`GET /workspaces/:workspace_id`
+
+| Parameter            | Description      |
+| -------------------- | -----------------|
+| `:workspace_id`      | The workspace ID |
+
 `GET /organizations/:organization_name/workspaces/:name`
 
 | Parameter            | Description                                                                                                                                                              |
@@ -587,6 +603,14 @@ $ curl \
 ## Delete a workspace
 
 This endpoint deletes a workspace.
+
+This endpoint has two forms, which behave identically. One refers to a workspace by its ID, and the other by its name and organization.
+
+`DELETE /workspaces/:workspace_id`
+
+Parameter            | Description                      |
+-------------------- | ---------------------------------|
+`:workspace_id`      | The ID of the workspace to delete|
 
 `DELETE /organizations/:organization_name/workspaces/:name`
 
@@ -1016,33 +1040,9 @@ $ curl \
 
 The Workspaces API also supports the following shallow equivalents of some basic workspace functionality already mentioned above:
 
-### Show workspace by ID
-
-`GET /workspaces/:workspace_id`
-
-| Parameter            | Description      |
-| -------------------- | -----------------|
-| `:workspace_id`      | The workspace ID |
-
-This behaves the same as the [Show Workspace](#show-workspace) endpoint.
-
-### Update workspace by ID
-
-`PATCH /workspaces/:workspace_id`
-
-Parameter            | Description                       |
--------------------- | ----------------------------------|
-`:workspace_id`      | The ID of the workspace to update |
-
-This behaves the same as the [Update a Workspace](#update-a-workspace) endpoint.
 
 ### Delete workspace by ID
 
-`DELETE /workspaces/:workspace_id`
-
-Parameter            | Description                       |
--------------------- | ----------------------------------|
-`:workspace_id`      | The ID of the workspace to  delete|
 
 This behaves the same as the [Delete a Workspace](#delete-a-workspace) endpoint.
 
