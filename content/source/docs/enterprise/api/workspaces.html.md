@@ -1012,6 +1012,40 @@ $ curl \
 }
 ```
 
+## Shallow workspace equivalents
+
+The Workspaces API also supports the following shallow equivalents of some basic workspace functionality already mentioned above:
+
+### Show workspace by ID
+
+`GET /workspaces/:workspace_id`
+
+| Parameter            | Description      |
+| -------------------- | -----------------|
+| `:workspace_id`      | The workspace ID |
+
+This behaves the same as the [Show Workspace](#show-workspace) endpoint.
+
+### Update workspace by ID
+
+`PATCH /workspaces/:workspace_id`
+
+Parameter            | Description                       |
+-------------------- | ----------------------------------|
+`:workspace_id`      | The ID of the workspace to update |
+
+This behaves the same as the [Update a Workspace](#update-a-workspace) endpoint.
+
+### Delete workspace by ID
+
+`DELETE /workspaces/:workspace_id`
+
+Parameter            | Description                       |
+-------------------- | ----------------------------------|
+`:workspace_id`      | The ID of the workspace to  delete|
+
+This behaves the same as the [Delete a Workspace](#delete-a-workspace) endpoint.
+
 ## Available Related Resources
 
 The GET endpoints above can optionally return related resources, if requested with [the `include` query parameter](./index.html#inclusion-of-related-resources). The following resource types are available:
