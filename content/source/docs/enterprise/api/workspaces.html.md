@@ -302,12 +302,12 @@ _Migrating a legacy environment_
 
 Parameter            | Description
 -------------------- | -----------
-`:organization_name` | The name of the organization to create the workspace in. The organization must already exist in the system, and the user must have permissions to create new workspaces.
+`:organization_name` | The name of the organization the workspace belongs to.
 `:name`              | The name of the workspace to update, which can only include letters, numbers, `-`, and `_`. This will be used as an identifier and must be unique in the organization.
 
 ### Request Body
 
-This POST endpoint requires a JSON object with the following properties as a request payload.
+This PATCH endpoint requires a JSON object with the following properties as a request payload.
 
 Properties without a default value are required.
 
@@ -410,8 +410,8 @@ This endpoint lists workspaces in the organization.
 `GET /organizations/:organization_name/workspaces`
 
 | Parameter            | Description                                                                                                                                                              |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `:organization_name` | The name of the organization to create the workspace in. The organization must already exist in the system, and the user must have permissions to create new workspaces. |
+| -------------------- | --------------------------------------------------------|
+| `:organization_name` | The name of the organization to list the workspaces of. |
 
 ### Query Parameters
 
@@ -521,9 +521,9 @@ This endpoint shows details for a workspace in the organization.
 `GET /organizations/:organization_name/workspaces/:name`
 
 | Parameter            | Description                                                                                                                                                              |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `:organization_name` | The name of the organization to create the workspace in. The organization must already exist in the system, and the user must have permissions to create new workspaces. |
-| `:name`              | The name of the workspace to show details for, which can only include letters, numbers, `-`, and `_`.                                                          |
+| -------------------- | ----------------------------------------------------------------------------------------------------- |
+| `:organization_name` | The name of the organization the workspace belongs to.                                                |
+| `:name`              | The name of the workspace to show details for, which can only include letters, numbers, `-`, and `_`. |
 
 ### Sample Request
 
@@ -591,9 +591,9 @@ This endpoint deletes a workspace.
 `DELETE /organizations/:organization_name/workspaces/:name`
 
 | Parameter            | Description                                                                                                                                                              |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `:organization_name` | The name of the organization to create the workspace in. The organization must already exist in the system, and the user must have permissions to create new workspaces. |
-| `:name`              | The name of the workspace to delete, which can only include letters, numbers, `-`, and `_`.                                                                    |
+| -------------------- | ------------------------------------------------------------------------------------------- |
+| `:organization_name` | The name of the organization the workspace belongs to.                                      |
+| `:name`              | The name of the workspace to delete, which can only include letters, numbers, `-`, and `_`. |
 
 ### Sample Request
 
